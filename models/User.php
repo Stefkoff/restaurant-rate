@@ -2,102 +2,113 @@
 
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
+use Yii;
+use yii\web\IdentityInterface;
+use yii\base\Security;
+
+/**
+ * This is the model class for table "user".
+ *
+ * @property integer $id
+ * @property string $username
+ * @property string $password 
+ * @property string $firstname
+ * @property string $lastname
+ * @property string $auth_token
+ * @property string $access_token
+ */
+class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
     /**
      * @inheritdoc
      */
-    public static function findIdentity($id)
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return 'user';
     }
 
     /**
      * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function rules()
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Finds user by username
-     *
-     * @param  string      $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return [
+            [['password', 'auth_token'], 'required'],
+            [['username', 'password', 'firstname', 'lastname'], 'string', 'max' => 64],
+            [['auth_token', 'access_token'], 'string', 'max' => 64]
+        ];
     }
 
     /**
      * @inheritdoc
      */
-    public function getId()
+    public function attributeLabels()
     {
-        return $this->id;
+        return [
+            'id' => 'ID',
+            'username' => 'Username',
+            'password' => 'Password', 
+            'firstname' => 'Firstname',
+            'lastname' => 'Lastname',
+            'auth_token' => 'Auth Token',
+            'access_token' => 'Access Token',
+        ];
+    }
+    
+    public function login(){
+        Yii::$app->user->login($this);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
+    public function getAuthKey() {
+        return $this->auth_token;
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
+    public function getId() {
+        return $this->getPrimaryKey();
     }
 
-    /**
-     * Validates password
-     *
-     * @param  string  $password password to validate
-     * @return boolean if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
+    public function validateAuthKey($authKey) {
+        return $this->getAuthKey() === $authKey;
     }
+
+    public static function findIdentity($id) {
+        return static::findOne($id);
+    }
+
+    public static function findIdentityByAccessToken($token, $type = null) {
+        return static::findOne(['access_token' => $token]);
+    }
+    
+    public static function findByUsername($username){
+        return static::findOne(['username' => $username]);
+    }
+    
+    public static function findByPasswordResetToken($token){
+        //todo        
+    }
+    
+    public function validatePassword($password){       
+        return $this->password === sha1($password);
+    }
+    
+    public function setPassword($password){
+        $this->password = Yii::$app->security->generatePasswordHash($password);
+    }
+    
+    public function generateAuthKey(){
+        $this->auth_token = Yii::$app->security->generateRandomKey() . '_' . time();
+    }
+    
+    public function generetePasswordResetToken(){
+        $this->access_token = Yii::$app->security->generateRandomKey() . '_' . time();
+    }
+    
+    public function removePasswordResetToken(){
+        $this->access_token = null;
+    }
+    
+    public static function sayHello(){
+        return "Hello World";
+    }
+
 }
