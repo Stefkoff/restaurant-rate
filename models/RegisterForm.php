@@ -46,7 +46,7 @@ class RegisterForm extends Model{
         $user->auth_token = Yii::$app->security->generateRandomString();
         
         if(!$user->save()){
-            Yii::warning($user->getErrors());
+            Yii::warning($user->getErrors());            
             return false;
         }
         
