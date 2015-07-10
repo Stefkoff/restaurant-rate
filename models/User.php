@@ -5,6 +5,7 @@ namespace app\models;
 use Yii;
 use yii\web\IdentityInterface;
 use yii\base\Security;
+use yii\helpers\Url;
 
 /**
  * This is the model class for table "user".
@@ -12,6 +13,7 @@ use yii\base\Security;
  * @property integer $id
  * @property string $username
  * @property string $password 
+ * @property string $email
  * @property string $firstname
  * @property string $lastname
  * @property string $auth_token
@@ -33,9 +35,10 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['password', 'auth_token'], 'required'],
-            [['username', 'password', 'firstname', 'lastname'], 'string', 'max' => 64],
-            [['auth_token', 'access_token'], 'string', 'max' => 64]
+            [['username', 'email'], 'required'],
+            [['id'], 'integer'],
+            [['username', 'password', 'firstname', 'lastname', 'auth_token', 'access_token'], 'string', 'max' => 64],
+            [['email'], 'string', 'max' => 45]
         ];
     }
 
@@ -48,11 +51,26 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'id' => 'ID',
             'username' => 'Username',
             'password' => 'Password', 
+            'email' => 'Email',
             'firstname' => 'Firstname',
             'lastname' => 'Lastname',
             'auth_token' => 'Auth Token',
             'access_token' => 'Access Token',
         ];
+    }
+    
+    public function generateAccessToken(){
+        $this->access_token = sha1($this->auth_token);
+        $this->save();
+        
+        $text = Url::toRoute('site/recover', $email = $this->email, $token = $this->access_token);
+        
+        Yii::$app->mailer->compose()
+                ->setFrom('noreply@restaurant.com')
+                ->setTo($this->email)
+                ->setSubject('Password Recovery')
+                ->setTextBody($text)
+                ->send();
     }
     
     public function login(){

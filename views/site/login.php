@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $form yii\bootstrap\ActiveForm */
@@ -30,6 +31,14 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $form->field($model, 'rememberMe', [
         'template' => "<div class=\"col-lg-offset-1 col-lg-3\">{input}</div>\n<div class=\"col-lg-8\">{error}</div>",
     ])->checkbox() ?>
+    
+    <br>
+    <br>
+    <div class="warning">
+        <?=  Html::a('Забравена парлоа?', Url::toRoute('site/forgot'))?>
+    </div>
+    <br>
+    <br>
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">

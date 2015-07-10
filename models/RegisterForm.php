@@ -14,6 +14,7 @@ use app\models\User;
 
 class RegisterForm extends Model{
     public $username;
+    public $email;
     public $password;
     public $passwordRepeat;
     public $firstname;
@@ -21,7 +22,7 @@ class RegisterForm extends Model{
     
     public function rules(){
         return [
-            [['username', 'password'], 'required'],
+            [['username', 'email', 'password', 'passwordRepeat'], 'required'],
             [['firstname', 'lastname'], 'default'],
             ['passwordRepeat', 'checkPasswordRepeat']
         ];
@@ -40,8 +41,9 @@ class RegisterForm extends Model{
         }
         $user = new User();
         $user->username = $this->username;
+        $user->email = $this->email;
         $user->password = sha1($this->password);
-        $this->firstname = $this->firstname;
+        $user->firstname = $this->firstname;
         $user->lastname = $this->lastname;
         $user->auth_token = Yii::$app->security->generateRandomString();
         

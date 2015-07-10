@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\RegisterForm;
 use app\models\ContactForm;
+use app\models\User;
 
 class SiteController extends Controller
 {
@@ -108,5 +109,26 @@ class SiteController extends Controller
     public function actionAbout()
     {
         return $this->render('about');
+    }
+    
+    public function actionForgot(){
+        
+        $requst = Yii::$app->request;        
+        
+        if($requst->isPost){
+            $email = $requst->post('email');                                    
+            $user = User::find()->where('email = :email', [':email' => $email])->one();                        
+            
+            if(!$user){
+                Yii::$app->getSession()->setFlash('emailNotFound', 'Емайл адресът не е намерен!');                
+            } else{
+                $userAccessToken = $user->generateAccessToken();
+                Yii::$app->getSession()->setFlash('emailFound', 'До вас е изпратен имейл');
+            }
+            
+            return $this->render('forgot_pass');
+        }
+        
+        return $this->render('forgot_pass');
     }
 }
