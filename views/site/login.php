@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <?=  Html::a('Забравена парлоа?', Url::toRoute('site/forgot'))?>
     </div>
     <br>
-    <br>
+    <br>        
 
     <div class="form-group">
         <div class="col-lg-offset-1 col-lg-11">

@@ -6,6 +6,7 @@ use Yii;
 use yii\web\IdentityInterface;
 use yii\base\Security;
 use yii\helpers\Url;
+use yii\helpers\Html;
 
 /**
  * This is the model class for table "user".
@@ -35,10 +36,9 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'email'], 'required'],
-            [['id'], 'integer'],
-            [['username', 'password', 'firstname', 'lastname', 'auth_token', 'access_token'], 'string', 'max' => 64],
-            [['email'], 'string', 'max' => 45]
+            [['username', 'password', 'email'], 'required'],
+            [['username', 'email', 'firstname', 'lastname'], 'string', 'max' => 45],
+            [['password', 'auth_token', 'access_token'], 'string', 'max' => 64]
         ];
     }
 
@@ -63,7 +63,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         $this->access_token = sha1($this->auth_token);
         $this->save();
         
-        $text = Url::toRoute('site/recover', $email = $this->email, $token = $this->access_token);
+        $text = Html::a('Click here', Yii::$app->urlManager->createAbsoluteUrl(['site/recover', 'email' => $this->email, 'token' => $this->access_token]));
+        $text = Yii::$app->stringHelper->fixUrlAmpersand($text);
         
         Yii::$app->mailer->compose()
                 ->setFrom('noreply@restaurant.com')

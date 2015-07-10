@@ -131,4 +131,21 @@ class SiteController extends Controller
         
         return $this->render('forgot_pass');
     }
+    
+    public function actionRecover(){
+        $request = Yii::$app->request;
+        if($request->isGet){
+            $email = $request->get('email');
+            $access_token = $request->get('token');
+
+            //$user = User::find()->where(['email' => $email, 'access_token' => $access_token])->one();
+            $user = User::findOne(['email' => $email, 'access_token' => $access_token]);
+            
+            if(!$user){
+                $this->goHome();
+            } else{
+                return $this->render('resetPassword');
+            }                        
+        }
+    }
 }
