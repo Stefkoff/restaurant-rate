@@ -42,10 +42,16 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         ];
     }
     
-    public function beforeSave($insert) {
+    public function beforeSave($insert) {        
+                        
+        if($insert){
+            $this->password = sha1($this->password);
+            $this->auth_token = Yii::$app->security->generateRandomString();        
+        }
         
-        $this->password = sha1($this->password);
-        $this->auth_token = Yii::$app->security->generateRandomString();
+        if($this->scenario == 'selfupdate'){
+            $this->password = sha1($this->password);
+        }
         
         if(parent::beforeSave($insert)){
             return true;
@@ -69,6 +75,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             'auth_token' => 'Auth Token',
             'access_token' => 'Access Token',
         ];
+    }
+    
+    public function scenarios() {
+        $scenarios = parent::scenarios();
+        $scenarios['selfupdate'] = ['password'];
+        return $scenarios;
     }
     
     public function generateAccessToken(){

@@ -41,9 +41,14 @@ AppAsset::register($this);
                 $items[] = ['label' => 'Register', 'url' => ['site/register']];
                 $items[] = ['label' => 'Login', 'url' => ['/site/login']];
             } else{
+                $items[] = [
+                    'label' => 'Профил',
+                    'url' => ['/user/profile']
+                ];
+                
                 $items[] = ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
                             'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']];
+                            'linkOptions' => ['data-method' => 'post']];                
             }
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
