@@ -17,13 +17,24 @@ class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
+    public $jsOptions = array(
+        'position' => \yii\web\View::POS_HEAD
+    );
+     public $depends = [
+        'yii\web\YiiAsset',
+//        'yii\bootstrap\BootstrapAsset',
+//        'yii\web\JqueryAsset'
+    ];
     public $css = [
         'css/site.css',
+        'css/jquery.dialog2.css',
+        'css/bootstrap.css'
     ];
     public $js = [
+        'js/jquery.form.min.js',
+        'js/jquery.controls.js',
+        'js/jquery.dialog2.js',
+        'js/jquery.dialog2.helpers.js',        
     ];
-    public $depends = [
-        'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
-    ];
+   
 }

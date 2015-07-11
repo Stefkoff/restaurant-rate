@@ -11,6 +11,8 @@ namespace app\moduls\admin\controllers;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use app\filters\AccessRules;
+use yii\data\ActiveDataProvider;
+use app\models\User;
 
 class UsersController extends Controller{
     public function behaviors() {
@@ -22,7 +24,7 @@ class UsersController extends Controller{
                 ],
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'view'],
                         'allow' => true,
                         'roles' => ['admin']
                     ]
@@ -33,6 +35,19 @@ class UsersController extends Controller{
     
     public function actionIndex()
     {
-        return $this->render('index');
+        $dataProvider = new ActiveDataProvider([
+            'query' => User::find(),
+            'pagination' => [
+                'pageSize' => 5
+            ]
+        ]);
+        
+        return $this->render('index', [
+            'dataProvider' => $dataProvider
+        ]);
+    }
+    
+    public function actionView(){
+        return $this->renderPartial('view');
     }
 }
