@@ -17,13 +17,18 @@ class SiteController extends Controller
     {
         return [
             'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'class' => AccessControl::className(),      
+                'only' => ['register', 'recover', 'reset', 'logout'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['register', 'recover', 'reset'],
+                        'allow' => true,
+                        'roles' => ['?']
                     ],
                 ],
             ],
@@ -144,8 +149,37 @@ class SiteController extends Controller
             if(!$user){
                 $this->goHome();
             } else{
-                return $this->render('resetPassword');
+                return $this->render('resetPassword', [
+                    'user_id' => $user->id
+                ]);
             }                        
+        }
+    }
+    
+    public function actionReset(){        
+        
+        $request = Yii::$app->request;
+        
+        if($request->isPost){
+            $password = $request->post('password');
+            $passwordRepeat = $request->post('password_repeat');
+            $userId = $request->post('userId');
+            
+            $user = User::findIdentity($userId);
+            
+            if($password !== $passwordRepeat){
+                Yii::$app->getSession()->setFlash('passwordRepeat', 'Паролите не съвпадат');
+                
+                return $this->render('resetPassword', [
+                    'user_id' => $user->id
+                ]);
+            } else{
+                $user->password = $password;
+                if($user->save()){                    
+                    Yii::$app->user->login($user);
+                }                      
+                return $this->render('index');
+            }
         }
     }
 }

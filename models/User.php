@@ -41,6 +41,18 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['password', 'auth_token', 'access_token'], 'string', 'max' => 64]
         ];
     }
+    
+    public function beforeSave($insert) {
+        
+        $this->password = sha1($this->password);
+        $this->auth_token = Yii::$app->security->generateRandomString();
+        
+        if(parent::beforeSave($insert)){
+            return true;
+        }
+        
+        return false;
+    }
 
     /**
      * @inheritdoc

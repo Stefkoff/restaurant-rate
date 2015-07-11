@@ -42,10 +42,9 @@ class RegisterForm extends Model{
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->password = sha1($this->password);
+        $user->password = $this->password;
         $user->firstname = $this->firstname;
-        $user->lastname = $this->lastname;
-        $user->auth_token = Yii::$app->security->generateRandomString();
+        $user->lastname = $this->lastname;        
         
         if(!$user->save()){
             Yii::warning($user->getErrors());            
