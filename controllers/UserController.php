@@ -10,6 +10,7 @@ namespace app\controllers;
 
 use Yii;
 use yii\filters\AccessControl;
+use app\filters\AccessRules;
 use yii\web\Controller;
 use app\models\User;
 
@@ -19,6 +20,9 @@ class UserController extends Controller{
             'access' => [
                 'class' => AccessControl::className(),
                 'only' => ['profile', 'edit'],
+                'ruleConfig' => [
+                    'class' => AccessRules::className()
+                ],
                 'rules' => [
                     [
                         'actions' => ['profile', 'edit'],
@@ -48,9 +52,9 @@ class UserController extends Controller{
             
             if(!$user){
                 return $this->goHome();
-            }            
+            }                                    
             
-            if($user->load($request->post()) && $user->validate()){
+            if($user->load($request->post()) && $user->validate()){                
                 if(isset($_POST['password']) && isset($_POST['password-repeat'])){
                     $password = $request->post('password');
                     $passwordRepeat = $request->post('password-repeat');
@@ -65,18 +69,22 @@ class UserController extends Controller{
                     
                     $user->password = $password;
                     $user->setScenario('selfupdate');
-                }
+                }                                
                 
-                if($user->save()){
+                if($user->save()){                                                            
                     return $this->render('profile', [
                         'user' => $user
                     ]);
+                } else{
+                    Yii::info($user->getErrors());
                 }
             }                        
         }
         
         $userId = $request->get('id');       
         $user = User::findOne($userId);
+        
+        $user->isAdmin();
         
         if(!$user){
             return $this->goHome();

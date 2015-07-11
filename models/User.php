@@ -19,9 +19,11 @@ use yii\helpers\Html;
  * @property string $lastname
  * @property string $auth_token
  * @property string $access_token
+ * 
+ * @property GroupMember[] $groupMembers 
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
-{
+{            
     /**
      * @inheritdoc
      */
@@ -36,17 +38,18 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
-            [['username', 'password', 'email'], 'required'],
+            [['username', 'email'], 'required'],
+            [['password'], 'required', 'except' => 'selfupdate'],
             [['username', 'email', 'firstname', 'lastname'], 'string', 'max' => 45],
             [['password', 'auth_token', 'access_token'], 'string', 'max' => 64]
         ];
     }
     
-    public function beforeSave($insert) {        
-                        
+    public function beforeSave($insert) {                            
+        
         if($insert){
             $this->password = sha1($this->password);
-            $this->auth_token = Yii::$app->security->generateRandomString();        
+            $this->auth_token = Yii::$app->security->generateRandomString();                                                
         }
         
         if($this->scenario == 'selfupdate'){
@@ -58,6 +61,24 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         }
         
         return false;
+    }
+    
+    public function afterSave($insert, $changedAttributes) {
+        
+        
+        if($insert){
+            $groupMember = new GroupMember();
+
+            $groupMember->group_id = Group::GROUP_USERS;
+            $groupMember->user_id = $this->id;
+            if(!$groupMember->save()){
+                return false;
+            }
+        }
+        
+        if(parent::afterSave($insert, $changedAttributes)){
+            return true;
+        }
     }
 
     /**
@@ -82,6 +103,39 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         $scenarios['selfupdate'] = ['password'];
         return $scenarios;
     }
+    
+    public function isAdmin(){
+        $groupMember = $this->getGroupMembers();
+        
+        $member = $groupMember->where('group_id = 3')->one();
+        
+        if(!empty($member)){
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public function isModerator(){
+        $groupMember = $this->getGroupMembers();
+        
+        $member = $groupMember->where('group_id = 2')->one();
+        
+        if(!empty($member)){
+            return true;
+        }
+        
+        return false;
+        
+    }
+    
+    /**
+    * @return \yii\db\ActiveQuery
+    */
+   public function getGroupMembers()
+   {
+       return $this->hasMany(GroupMember::className(), ['user_id' => 'id']);
+   }
     
     public function generateAccessToken(){
         $this->access_token = sha1($this->auth_token);
