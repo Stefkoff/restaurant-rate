@@ -33,30 +33,15 @@ AppAsset::register($this);
                 ],
             ]);
             $items = array(
-                ['label' => 'Home', 'url' => ['/site/index']],
-                ['label' => 'About', 'url' => ['/site/about']],
-                ['label' => 'Contact', 'url' => ['/site/contact']],
-            );
-            if(Yii::$app->user->isGuest){
-                $items[] = ['label' => 'Register', 'url' => ['site/register']];
-                $items[] = ['label' => 'Login', 'url' => ['/site/login']];
-            } else{
-                $items[] = [
-                    'label' => 'Профил',
-                    'url' => ['/user/profile']
-                ];
+                ['label' => 'Заведения', 'url' => ['/admin/places/']],
+                ['label' => 'Потребители', 'url' => ['/admin/users/']],
+                ['label' => 'Настройки', 'url' => ['/admin/settings']],
+                ['label' => 'Назад', 'url' => ['/site/index']],
+            );            
                 
-                if(Yii::$app->user->identity->isAdmin()){
-                    $items[] = [
-                        'label' => 'Админ панел',
-                        'url' => ['/admin']
-                    ];
-                }
-                
-                $items[] = ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
-                            'url' => ['/site/logout'],
-                            'linkOptions' => ['data-method' => 'post']];                
-            }
+            $items[] = ['label' => 'Logout (' . Yii::$app->user->identity->username . ')',
+                        'url' => ['/site/logout'],
+                        'linkOptions' => ['data-method' => 'post']];                            
             echo Nav::widget([
                 'options' => ['class' => 'navbar-nav navbar-right'],
                 'items' => $items
