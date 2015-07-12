@@ -50,17 +50,7 @@ class GroupMember extends \yii\db\ActiveRecord
         ];
     }
     
-    public function afterSave($insert, $changedAttributes) {
-                        
-        if($this->group_id == Group::GROUP_ADMIS){
-            $self = new GroupMember();
-            $self->group_id = Group::GROUP_MODERATORS;
-            $self->user_id = $this->user_id;
-            if(!$self->save()){
-                Yii::info($self->getErrors());
-                return false;
-            }
-        }
+    public function afterSave($insert, $changedAttributes) {                                
         
         if(parent::afterSave($insert, $changedAttributes)){
             return true;
@@ -81,5 +71,5 @@ class GroupMember extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
-    }
+    }        
 }

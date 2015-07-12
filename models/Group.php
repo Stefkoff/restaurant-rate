@@ -55,4 +55,14 @@ class Group extends \yii\db\ActiveRecord
     {
         return $this->hasMany(GroupMember::className(), ['group_id' => 'id']);
     }
+    
+    public static function isValidGroup($id){
+        $group = self::findOne($id);
+        
+        if($group){
+            return true;
+        }
+        
+        return false;
+    }
 }

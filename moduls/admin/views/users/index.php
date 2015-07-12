@@ -26,6 +26,7 @@ echo GridView::widget([
         ['class' => 'yii\grid\ActionColumn', 'template' => '{view} {update} {delete}'],
     ]
 ]);
+
 ?>
 
 <script type="text/javascript">

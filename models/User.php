@@ -20,7 +20,7 @@ use yii\helpers\Html;
  * @property string $auth_token
  * @property string $access_token
  * 
- * @property GroupMember[] $groupMembers 
+ * @property GroupMember $groupMembers 
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {            
@@ -47,10 +47,8 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     
     public function beforeSave($insert) {                            
         
-        if($insert){
-            $this->password = sha1($this->password);
-            $this->auth_token = Yii::$app->security->generateRandomString();                                                
-        }
+        $this->password = sha1($this->password);
+        $this->auth_token = Yii::$app->security->generateRandomString();                                                
         
         if($this->scenario == 'selfupdate'){
             $this->password = sha1($this->password);
@@ -63,7 +61,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         return false;
     }
     
-    public function afterSave($insert, $changedAttributes) {
+    public function afterSave($insert, $changedAttributes) {                        
         
         
         if($insert){
@@ -80,7 +78,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             return true;
         }
     }
-
+    
     /**
      * @inheritdoc
      */
@@ -134,7 +132,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     */
    public function getGroupMembers()
    {
-       return $this->hasMany(GroupMember::className(), ['user_id' => 'id']);
+       return $this->hasOne(GroupMember::className(), ['user_id' => 'id']);
    }
     
     public function generateAccessToken(){

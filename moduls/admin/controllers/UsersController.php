@@ -8,11 +8,14 @@
 
 namespace app\moduls\admin\controllers;
 
+use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
 use app\filters\AccessRules;
 use yii\data\ActiveDataProvider;
 use app\models\User;
+use app\models\GroupMember;
+use app\models\Group;
 
 class UsersController extends Controller{
     public function behaviors() {
@@ -47,7 +50,36 @@ class UsersController extends Controller{
         ]);
     }
     
-    public function actionNew(){
-        return $this->renderPartial('new');
+    public function actionNew(){        
+        $request = Yii::$app->request;
+        $user = new User();
+        
+        if($request->isPost){
+            if($user->load($request->post()) && $user->save()){
+                $role = (int) $request->post('role');
+                
+                if(Group::isValidGroup($role)){
+                    $groupMember = new GroupMember();
+                    $groupMember->user_id = $user->id;
+                    $groupMember->group_id = $role;
+                    
+                    if($groupMember->save()){
+                        return "<a class='auto-close'></a>";
+                    }
+                    
+                } else{
+                    throw new CHttpException(404,'Не съществува такава група!');
+                }
+                    
+            } else{
+                return $this->renderPartial('new', [
+                    'user' => $user
+                ]);
+            }
+        }                
+        
+        return $this->renderPartial('new', [
+            'user' => $user
+        ]);
     }
 }

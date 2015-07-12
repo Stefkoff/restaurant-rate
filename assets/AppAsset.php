@@ -35,6 +35,7 @@ class AppAsset extends AssetBundle
         'js/jquery.controls.js',
         'js/jquery.dialog2.js',
         'js/jquery.dialog2.helpers.js',        
+        'js/main.js'
     ];
    
 }

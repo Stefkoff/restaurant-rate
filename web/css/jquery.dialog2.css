@@ -3,7 +3,9 @@
     left: 50% !important;
     display: none;     
     margin: 0 0 0 -280px;
-    height: 300px !important;
+    bottom: auto !important;
+    height: auto !important;
+    max-height: 1000px !important;
 }
 
 .modal.loading .modal-header .loader {
