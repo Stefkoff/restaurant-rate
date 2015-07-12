@@ -5,5 +5,5 @@
 </form>
 
 <div class="form-actions">
-    <button>hello</button>
+    <button class="close-dialog">Close</button>
 </div>

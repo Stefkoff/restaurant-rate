@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 
 $this->title = 'Потребители';
@@ -10,7 +11,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <h1><?=$this->title?></h1>
 <br/><br/>
-<a class="open-dialog" href="<?=Yii::$app->urlManager->createAbsoluteUrl('admin/users/view')?>">simple alert</a>
+<?=Html::a('Нов', Url::toRoute('users/new'), [
+    'class' => 'btn btn-primary open-dialog'
+])?>
 <br/><br/>
 <?php
 echo GridView::widget([

@@ -24,7 +24,7 @@ class UsersController extends Controller{
                 ],
                 'rules' => [
                     [
-                        'actions' => ['index', 'view'],
+                        'actions' => ['index', 'view', 'new'],
                         'allow' => true,
                         'roles' => ['admin']
                     ]
@@ -47,7 +47,7 @@ class UsersController extends Controller{
         ]);
     }
     
-    public function actionView(){
-        return $this->renderPartial('view');
+    public function actionNew(){
+        return $this->renderPartial('new');
     }
 }
