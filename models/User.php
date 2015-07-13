@@ -24,6 +24,9 @@ use yii\helpers\Html;
  */
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {            
+    
+    public $group = null;
+    
     /**
      * @inheritdoc
      */
@@ -77,6 +80,12 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
         if(parent::afterSave($insert, $changedAttributes)){
             return true;
         }
+    }
+    
+    public function afterFind() {
+        $this->group = $this->groupMembers->find()->one();
+        
+        parent::afterFind();
     }
     
     /**
