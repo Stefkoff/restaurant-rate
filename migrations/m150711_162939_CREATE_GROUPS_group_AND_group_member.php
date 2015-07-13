@@ -2,7 +2,6 @@
 
 use yii\db\Schema;
 use yii\db\Migration;
-use yii\db\Command;
 
 class m150711_162939_CREATE_GROUPS_group_AND_group_member extends Migration
 {
@@ -10,14 +9,14 @@ class m150711_162939_CREATE_GROUPS_group_AND_group_member extends Migration
     {
         
         $sql = <<<SQL
-CREATE TABLE IF NOT EXISTS `group` (
+CREATE TABLE `group` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(45) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
                 
-CREATE TABLE IF NOT EXISTS `group_member` (
+CREATE TABLE `group_member` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `group_id` int(11) unsigned NOT NULL,
   `user_id` int(11) unsigned NOT NULL,
@@ -30,8 +29,7 @@ CREATE TABLE IF NOT EXISTS `group_member` (
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 SQL;
         
-        $command = new Command();
-        $command->execute($sql);
+        Yii::$app->db->createCommand($sql)->execute();
     }
 
     public function down()

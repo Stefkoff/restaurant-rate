@@ -1,7 +1,6 @@
 <?php
 
 use yii\db\Schema;
-use yii\db\Command;
 use yii\db\Migration;
 
 class m150711_091845_CREATE_user_TABLE extends Migration
@@ -9,9 +8,8 @@ class m150711_091845_CREATE_user_TABLE extends Migration
     public function up()
     {
         $sql = <<<SQL
-CREATE DATABASE `restaurant` /*!40100 DEFAULT CHARACTER SET utf8 */;
     
-CREATE TABLE IF NOT EXISTS `user` (
+CREATE TABLE `user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `username` varchar(45) NOT NULL,
   `password` varchar(64) NOT NULL,
@@ -24,8 +22,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
 SQL;
-        $command = new Command();
-        $command->execute($sql);
+        Yii::$app->db->createCommand($sql)->execute();
     }
 
     public function down()
