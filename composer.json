@@ -18,7 +18,9 @@
         "yiisoft/yii2": ">=2.0.4",
         "yiisoft/yii2-bootstrap": "*",
         "yiisoft/yii2-swiftmailer": "*",
-        "rmrevin/yii2-fontawesome": "2.10.*"
+        "rmrevin/yii2-fontawesome": "2.10.*",
+        "2amigos/yii2-google-places-library" : "*",
+        "2amigos/yii2-google-maps-library" : "*"        
     },
     "require-dev": {
         "yiisoft/yii2-codeception": "*",
