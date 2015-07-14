@@ -9,35 +9,25 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <div class="user-profile">
     <div class="row">
-        <div class="col-lg-4">
-            <h1><?=Html::encode($this->title) . ': ' . $user->username?></h1>
+        <div class="span6">
+            <div class="row-fluid">
+                <div class="span12">
+                    <h1>
+                        Вашият <?= Html::encode($this->title) ?>
+                    </h1>
+                    <i><?=Html::a('Редактирай', Url::toRoute(['user/edit', 'id' => $user->id]))?></i>
+                </div>
+
+
         </div>
-        <div class="col-lg-8">
-            <?=Html::a('Edit', Url::toRoute(['user/edit', 'id' => $user->id]))?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-1">
-            Email
-        </div>
-        <div class="col-md-1">
-            <?=$user->email;?>
-        </div>
-    </div>
-    <div class="row">        
-        <div class="col-md-1">
-            Firstname
-        </div>
-        <div class="col-md-1">
-            <?=$user->firstname;?>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-1">
-            Lastname
-        </div>
-        <div class="col-md-1">
-            <?=$user->lastname;?>
-        </div>
+            <div class="row">
+                <div class="span6">
+                    Имена: <b><?=$user->firstname." ".$user->lastname?></b>
+
+                </div>
+                <div class="span6"> Email: <b><?=$user->email;?></b></div>
+            </div>
     </div>
 </div>
+
+
