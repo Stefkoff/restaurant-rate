@@ -10,6 +10,7 @@ use app\models\LoginForm;
 use app\models\RegisterForm;
 use app\models\ContactForm;
 use app\models\User;
+use yii\db\Query;
 
 class SiteController extends Controller
 {
@@ -18,10 +19,10 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),      
-                'only' => ['register', 'recover', 'reset', 'logout'],
+                'only' => ['register', 'recover', 'reset', 'logout', 'places'],
                 'rules' => [
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout', 'places'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -181,5 +182,21 @@ class SiteController extends Controller
                 return $this->render('index');
             }
         }
+    }
+    
+    public function actionPlaces($q){
+         $query = new Query;
+    
+        $query->select('username')
+            ->from('user')
+            ->where('username LIKE "%' . $q .'%"')
+            ->orderBy('username');
+        $command = $query->createCommand();
+        $data = $command->queryAll();
+        $out = [];
+        foreach ($data as $d) {
+            $out[] = ['value' => $d['username']];
+        }
+        echo \yii\helpers\Json::encode($out);                         
     }
 }

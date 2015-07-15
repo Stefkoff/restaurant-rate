@@ -45,3 +45,6 @@ Temporary Items
 /nbproject
 /vendor
 vendor
+.settings
+.buildpath
+.project
