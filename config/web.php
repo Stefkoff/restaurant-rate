@@ -1,6 +1,10 @@
 <?php
 
-$params = require(__DIR__ . '/params.php');
+if(file_exists(__DIR__ . '/params-devel.php')){
+    $params = require(__DIR__ . '/params-devel.php');
+} else{
+    $params = require(__DIR__ . '/params.php');
+}
 
 $config = [
     'id' => 'basic',

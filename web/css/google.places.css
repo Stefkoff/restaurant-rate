@@ -12,6 +12,10 @@ and open the template in the editor.
    height: 500px;
 }
 
-#places{
+#google-search{
 	height: 40px;
+}
+
+#place-info{
+	display: none;
 }

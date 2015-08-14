@@ -15,6 +15,7 @@ class GoogleAssets extends AssetBundle{
     public $js = [                
         'https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=places',        
         'js/google.places.js',
+    		'js/socket.js'
     ];        
     public $css = [
         'css/google.places.css'

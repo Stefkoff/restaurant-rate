@@ -46,12 +46,15 @@ class PlacesController extends Controller{
     	
     	$search = new Search(['key' => 'AIzaSyBOHCLkfRYWN6Jpvz8l2P7zY-pTIABQ86o']);
     	
-    	$result = $search->text($query);
+    	var_dump($search->api);
+    	die;
+    	
+    	$result = $search->text($query);    	    
     	
     	$places = [];
     	
     	foreach ($result['results'] as $res){
-    		$places[] = ['value' => $res['formatted_address'], 'goog' => $res['geometry']['location']['lat']];
+    		$places[] = ['value' => $res['formatted_address'], 'lat' => $res['geometry']['location']['lat'], 'lng' => $res['geometry']['location']['lng'], 'address' => $res['name'], 'id' => $res['place_id'], 'type' => ($res['types'])];
     	}    	    
     	
     	echo Json::encode($places);
