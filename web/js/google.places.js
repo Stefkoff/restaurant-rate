@@ -14,6 +14,7 @@ var GoogleMaps = {
     },
     
     setMarckers: function(position, content){
+    	
     	var marker = new google.maps.Marker({
     		position: new google.maps.LatLng(position.lat, position.lng),
     		map: this.map,
